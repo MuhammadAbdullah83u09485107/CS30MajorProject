@@ -1,17 +1,21 @@
 # Major project proposal
 
 ## Description
-Wave defense game, you recruit troops to combat hordes of enemies that come at you in waves becoming progressively more difficult.
+Angry Birds game, use slingshot to kill pigs with varying levels of difficulty.
 
 ## Needs to have
-- Money collected from enemies to buy troops
-- multiple troop types with different attacks
-  - sword troop
-  - archer
-  - healer
-
+- obstacles that get in the way of the shot and move if hit
+- dotted line showing 
+- gravity
+- pigs dying when hit with enough force
+- functioning slingshot that can control power
+- multiple levels
+- high score
 
 ## Nice to have
-- 10+ waves
-- endless mode
-- multiple boss monsters
+- way to upgrade birds
+- more powerful pigs
+- birds which provide different powerups
+- TNT
+- different kinds of obstacles
+- sound effects

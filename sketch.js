@@ -12,6 +12,6 @@ function setup() {
 
 function draw() {
   background(220);
-
-  square(mouseX, mouseY, 500);
+  square(width/2, height/2, 100);
+  circle(mouseX, mouseY, 50);
 }

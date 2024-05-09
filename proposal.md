@@ -1,6 +1,7 @@
 # Major project proposal
 
 ## Description
+<<<<<<< HEAD
 Angry Birds game, use slingshot to kill pigs with varying levels of difficulty.
 
 ## Needs to have
@@ -19,3 +20,27 @@ Angry Birds game, use slingshot to kill pigs with varying levels of difficulty.
 - TNT
 - different kinds of obstacles
 - sound effects
+=======
+Angry Birds game where you shoot birds via slingshot to killl the pigs
+
+## Needs to have
+- gravity
+- pigs die when hit with enough force
+- movable obstacles defending the pigs
+- arc to show bird trajectory
+- multiple levels
+- decide wether or not the game is over or someone wins
+- restart game
+- how to play screen 
+- sound effects
+- high score
+
+
+
+## Nice to have
+- powers for different birds
+- TNT
+- glass obstacles
+- endless mode
+- different skins
+>>>>>>> 2432fdc733c2a4a373c28f418a5a6e66eeea9d40

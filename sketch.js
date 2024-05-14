@@ -4,14 +4,30 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
+let sprite;
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  new Canvas(windowWidth, windowHeight);
 }
 
 function draw() {
-  background(220);
-  square(width/4 * 3, height/2, 100);
-  circle(width/4, height, 50);
+  sprite = new Sprite();
+  sprite.width = 50;
+  sprite.height = 50;
 }
 
+function restartGame() {
+
+}
+
+ function howToPlayScreen() {
+
+}
+
+class Pigs {
+  constructor (x, y) {
+    this.x = width/2;
+    this.y = height/2;
+    this.speed = 5;
+  }
+}

@@ -31,3 +31,11 @@ class Pigs {
     this.speed = 5;
   }
 }
+
+class Birds {
+  constructor (x, y) {
+    this.x = width/4;
+    this.y = height / 2;
+    this.speed = 5;
+  }
+}

@@ -37,5 +37,6 @@ class Birds {
     this.x = width/4;
     this.y = height / 2;
     this.speed = 5;
+    this.radius = 50;
   }
 }

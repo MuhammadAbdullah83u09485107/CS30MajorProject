@@ -17,7 +17,6 @@ function draw() {
 }
 
 function restartGame() {
-
 }
 
  function howToPlayScreen() {

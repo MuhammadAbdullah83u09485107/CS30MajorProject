@@ -39,3 +39,7 @@ class Birds {
     this.radius = 50;
   }
 }
+
+function useBird() {
+  
+}

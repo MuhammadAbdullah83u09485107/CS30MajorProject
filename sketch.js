@@ -41,5 +41,4 @@ class Birds {
 }
 
 function useBird() {
-  
 }

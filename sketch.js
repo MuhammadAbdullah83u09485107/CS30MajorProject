@@ -4,50 +4,6 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let sprite;
-
-function setup() {
-  new Canvas(windowWidth, windowHeight);
-}
-
-function draw() {
-  sprite = new Sprite();
-  sprite.width = 50;
-  sprite.height = 50;
-}
-
-function restartGame() {
-}
-
- function howToPlayScreen() {
-
-}
-
-class Pigs {
-  constructor (x, y) {
-    this.x = width/2;
-    this.y = height/2;
-    this.speed = 5;
-  }
-}
-
-class Birds {
-  constructor (x, y) {
-    this.x = width/4;
-    this.y = height / 2;
-    this.speed = 5;
-    this.radius = 50;
-  }
-}
-
-function useBird() {
-}
-
-
-
-
-
-
 let bird;
 let sling;
 let ground;
@@ -59,27 +15,27 @@ function setup() {
     createCanvas(800, 600);
 
     // Create the bird
-    bird = createSprite(200, 400, 30, 30);
+    bird = new Sprite(200, 400, 30, 30);
     bird.shapeColor = color(255, 0, 0);
 
     // Create the sling
-    sling = createSprite(200, 400, 20, 10);
+    sling = new Sprite(200, 400, 20, 10);
     sling.visible = false;
 
     // Create the ground
-    ground = createSprite(width / 2, height - 10, width, 20);
+    ground = new Sprite(width / 2, height - 10, width, 20);
     ground.immovable = true;
 
     // Create pigs
     for (let i = 0; i < 3; i++) {
-        let pig = createSprite(600, 500 - i * 50, 40, 40);
+        let pig = new Sprite(600, 500 - i * 50, 40, 40);
         pig.shapeColor = color(0, 255, 0);
         pigs.push(pig);
     }
 
     // Create boxes
     for (let i = 0; i < 3; i++) {
-        let box = createSprite(650, 500 - i * 50, 50, 50);
+        let box = new Sprite(650, 500 - i * 50, 50, 50);
         box.shapeColor = color(150);
         boxes.push(box);
     }

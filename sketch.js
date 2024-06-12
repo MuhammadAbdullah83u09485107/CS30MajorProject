@@ -44,11 +44,13 @@ function setup() {
 function draw() {
     background(200);
 
+    // Drag the bird with the mouse before launch
     if (mouseIsPressed && !launched) {
         bird.position.x = mouseX;
         bird.position.y = mouseY;
     }
 
+    // Launch the bird when the mouse is released
     if (!mouseIsPressed && !launched && bird.position.x !== 200 && bird.position.y !== 400) {
         bird.velocity.x = (sling.position.x - bird.position.x) * 0.2;
         bird.velocity.y = (sling.position.y - bird.position.y) * 0.2;
@@ -69,16 +71,19 @@ function draw() {
     drawSprites();
 }
 
+// Function to destroy a pig when hit by the bird
 function destroyPig(bird, pig) {
     pig.remove();
 }
 
+// Function to handle key presses
 function keyPressed() {
     if (key === 'R' || key === 'r') {
         resetGame();
     }
 }
 
+// Function to reset the game to the initial state
 function resetGame() {
     bird.position.x = 200;
     bird.position.y = 400;
@@ -90,7 +95,7 @@ function resetGame() {
     pigs.forEach(pig => pig.remove());
     pigs = [];
     for (let i = 0; i < 3; i++) {
-        let pig = createSprite(600, 500 - i * 50, 40, 40);
+        let pig = new Sprite(600, 500 - i * 50, 40, 40);
         pig.shapeColor = color(0, 255, 0);
         pigs.push(pig);
     }
@@ -99,7 +104,7 @@ function resetGame() {
     boxes.forEach(box => box.remove());
     boxes = [];
     for (let i = 0; i < 3; i++) {
-        let box = createSprite(650, 500 - i * 50, 50, 50);
+        let box = new Sprite(650, 500 - i * 50, 50, 50);
         box.shapeColor = color(150);
         boxes.push(box);
     }

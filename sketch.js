@@ -20,7 +20,7 @@ function setup() {
 
     // Create the sling
     sling = new Sprite(200, 400, 20, 10);
-    sling.visible = false;
+    sling.visible = true;
 
     // Create the ground
     ground = new Sprite(width / 2, height - 10, width, 20);

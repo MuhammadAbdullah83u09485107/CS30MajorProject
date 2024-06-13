@@ -19,17 +19,17 @@ let restartButton;
 let score = 0;
 
 function preload() {
-    redBird = loadImage('redangrybird.webp');
-    chuckBird = loadImage('fastangrybird.webp');
-    bombBird = loadImage('angrybirdbomb.webp');
-    matildaBird = loadImage('matildaangrybird.png');
-    slingImage = loadImage('slingshotangrybirds.webp');
-    boxImage = loadImage('woodblockangrybird.webp');
-    pigImage = loadImage('pigangrybirds.webp');
+    redBird = loadImage('assets/redangrybird.webp');
+    chuckBird = loadImage('assets/fastangrybird.webp');
+    bombBird = loadImage('assets/angrybirdbomb.webp');
+    matildaBird = loadImage('assets/matildaangrybird.png');
+    slingImage = loadImage('assets/slingshotangrybirds.webp');
+    boxImage = loadImage('assets/woodblockangrybirds.webp');
+    pigImage = loadImage('assets/pigangrybirds.webp');
 }
 
 function setup() {
-    createCanvas(800, 600);
+    createCanvas(windowWidth, windowHeight);
     createBirds();
     createEnvironment();
     restartButton = createButton('Restart');

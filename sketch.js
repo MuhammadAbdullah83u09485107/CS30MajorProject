@@ -9,8 +9,6 @@
 
 
 
-
-
 let birds = [];
 let birdImages = {};
 let currentBirdIndex = 0;
@@ -19,18 +17,18 @@ let ground;
 let pigs = [];
 let boxes = [];
 let launched = false;
-let boxImage;
-let woodenBlocks = {};
+let boxImage, pigImage;
 let birdTypes = ["Red", "Chuck", "Bomb", "Matilda"];
 
 function preload() {
     // Load bird images
-    birdImages["Red"] = loadImage('F48FBDE5-6581-4665-8806-78B8C137D8DA.png'); // Red bird image
-    birdImages["Chuck"] = loadImage('752BB3AB-B034-4333-8059-26106A6451DC.png'); // Chuck bird image
-    birdImages["Bomb"] = loadImage('8BD229FD-6482-4D01-9288-499B0EC5FE5D.png'); // Bomb bird image
-    birdImages["Matilda"] = loadImage('EECF0ED8-2833-4621-A70E-AEC0F61E6D54.png'); // Matilda bird image
-    slingImage = loadImage('2CF8E663-F129-4C7A-9B5A-EF9F667A2F17.png'); // Slingshot image
-    boxImage = loadImage('EDCEFEFD-C15F-4AF3-BF18-7FD36A475B21.png'); // Box texture image
+    birdImages["Red"] = loadImage('redangrybird.webp'); // Red bird image
+    birdImages["Chuck"] = loadImage('fastangrybird.webp'); // Chuck bird image
+    birdImages["Bomb"] = loadImage('angrybirdbomb.webp'); // Bomb bird image
+    birdImages["Matilda"] = loadImage('matildaangrybird.png'); // Matilda bird image
+    slingImage = loadImage('slingshotangrybirds.webp'); // Slingshot image
+    boxImage = loadImage('woodblockangrybird.webp'); // Box texture image
+    pigImage = loadImage('pigangrybirds.webp'); // Pig image
 }
 
 function setup() {
@@ -94,7 +92,7 @@ function createEnvironment() {
 
     for (let i = 0; i < 3; i++) {
         let pig = createSprite(600, 500 - i * 50, 40, 40);
-        pig.shapeColor = color(0, 255, 0);
+        pig.addImage(pigImage);
         pigs.push(pig);
     }
 
@@ -184,7 +182,7 @@ function resetGame() {
     pigs = [];
     for (let i = 0; i < 3; i++) {
         let pig = createSprite(600, 500 - i * 50, 40, 40);
-        pig.shapeColor = color(0, 255, 0);
+        pig.addImage(pigImage);
         pigs.push(pig);
     }
 

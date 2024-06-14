@@ -1,3 +1,4 @@
+
 let birds = [];
 let birdImages = {};
 let currentBirdIndex = 0;
@@ -18,10 +19,12 @@ function preload() {
   birdImages["matilda"] = loadImage("assets/matildaangrybird.png");
   slingImage = loadImage("assets/slingshotangrybirds.webp");
   pigImage = loadImage("assets/pigangrybirds.webp");
-  block1 = loadImage("assets/block1.png");
-  block2 = loadImage("assets/block2.png");
-  block3 = loadImage("assets/block3.png");
-  block7 = loadImage("assets/block7.png");
+  blockImages = [
+    loadImage("assets/block1.png"),
+    loadImage("assets/block2.png"),
+    loadImage("assets/block3.png"),
+    loadImage("assets/block7.png")
+  ];
 }
 
 function setup() {
@@ -32,6 +35,7 @@ function setup() {
   restartButton.position(width / 2 - 50, height / 2 + 50);
   restartButton.mousePressed(resetGame);
   restartButton.hide();
+  console.log("Setup complete.");
 }
 
 function draw() {
@@ -67,41 +71,43 @@ function drawGame() {
   if (mouseIsPressed && !launched && gameState === "playing") {
     bird.position.x = mouseX;
     bird.position.y = mouseY;
-    bird.isStatic = true;
+    bird.isStatic = true; // Keep the bird static while dragging
   }
 
-  if (
-    !mouseIsPressed &&
-    !launched &&
-    gameState === "playing" &&
-    bird.position.x !== 200 &&
-    bird.position.y !== 400
-  ) {
+  if (!mouseIsPressed && !launched && gameState === "playing" && bird.position.x !== 200 && bird.position.y !== 400) {
     let dx = sling.position.x - bird.position.x;
     let dy = sling.position.y - bird.position.y;
     bird.velocity.x = dx * 0.1;
     bird.velocity.y = dy * 0.1;
-    bird.isStatic = false;
-    launched = true;
+    bird.isStatic = false; // Make bird dynamic when launched
+    console.log("Bird launched:", bird);
+    launched = true; // Set launched to true
   }
 
-  bird.collide(ground);
+  if (launched && bird.collide(ground)) {
+    nextBird();
+  }
+
+  applyGravity(); // Apply gravity in each frame
+
   for (let block of blocks) {
     bird.collide(block);
+    for (let pig of pigs) {
+      block.collide(pig, destroyPigOnCollision);
+    }
     block.collide(ground);
   }
+  
   for (let pig of pigs) {
-    bird.collide(pig, destroyPig);
+    bird.collide(pig, destroyPigOnCollision);
     pig.collide(ground);
   }
+  
   drawSprites();
+  
   textSize(24);
   fill(0);
   text(`Score: ${score}`, width - 100, 50);
-  if (currentBirdIndex >= birds.length - 1 && !launched) {
-    gameState = "gameOver";
-    restartButton.show();
-  }
 }
 
 function drawGameOver() {
@@ -116,16 +122,17 @@ function drawGameOver() {
 function createBirds() {
   for (let i = 0; i < birdTypes.length; i++) {
     let bird = createSprite(200, 400, 30, 30);
-    bird.scale = 0.2;
-    bird.addImage(birdImages[birdTypes[i]]);
+    bird.scale = 0.2; // Smaller bird size
+    bird.addImage(birdImages[birdTypes[i]]); // Add image based on bird type
     bird.type = birdTypes[i];
-    bird.visible = false;
-    bird.velocity.x = 0;
-    bird.velocity.y = 0;
-    bird.isStatic = true;
+    bird.visible = false; // Make all birds invisible initially
+    bird.velocity.x = 0; // Set initial velocity to zero
+    bird.velocity.y = 0; // Set initial velocity to zero
+    bird.isStatic = true; // Custom property to manage static state
     birds.push(bird);
   }
-  birds[0].visible = true;
+  birds[0].visible = true; // Only the first bird is visible initially
+  console.log("Birds created:", birds);
 }
 
 function createEnvironment() {
@@ -134,6 +141,7 @@ function createEnvironment() {
   ground = createSprite(width / 2, height - 10, width, 20);
   ground.immovable = true;
 
+  // Create structure for pigs
   let baseY = height - 50;
   let pigSize = 20;
   let blockSize = 50;
@@ -141,55 +149,104 @@ function createEnvironment() {
   // Bottom layer blocks
   for (let i = 0; i < 3; i++) {
     let block = createSprite(650 + i * blockSize, baseY, blockSize, blockSize / 5);
-    block.addImage(block7);
+    block.addImage(blockImages[0]);
+    block.velocity.x = 0; // Set initial velocity to zero
+    block.velocity.y = 0; // Set initial velocity to zero
+    block.isStatic = true; // Custom property to manage static state
     blocks.push(block);
   }
 
   // Middle blocks and pigs
   for (let i = 0; i < 3; i++) {
     let block = createSprite(650 + i * blockSize, baseY - blockSize / 5, blockSize / 5, blockSize);
-    block.addImage(block2);
+    block.addImage(blockImages[1]);
+    block.velocity.x = 0; // Set initial velocity to zero
+    block.velocity.y = 0; // Set initial velocity to zero
+    block.isStatic = true; // Custom property to manage static state
     blocks.push(block);
   }
 
   let pig1 = createSprite(700, baseY - blockSize / 5, pigSize, pigSize);
   pig1.addImage(pigImage);
   pig1.scale = 0.03;
+  pig1.velocity.x = 0; // Set initial velocity to zero
+  pig1.velocity.y = 0; // Set initial velocity to zero
+  pig1.isStatic = true; // Custom property to manage static state
   pigs.push(pig1);
 
   // Top blocks and pigs
   for (let i = 0; i < 3; i++) {
     let block = createSprite(650 + i * blockSize, baseY - blockSize - blockSize / 5, blockSize, blockSize / 5);
-    block.addImage(block1);
+    block.addImage(blockImages[2]);
+    block.velocity.x = 0; // Set initial velocity to zero
+    block.velocity.y = 0; // Set initial velocity to zero
+    block.isStatic = true; // Custom property to manage static state
     blocks.push(block);
   }
 
   let pig2 = createSprite(675, baseY - blockSize - blockSize / 5, pigSize, pigSize);
   pig2.addImage(pigImage);
   pig2.scale = 0.03;
+  pig2.velocity.x = 0; // Set initial velocity to zero
+  pig2.velocity.y = 0; // Set initial velocity to zero
+  pig2.isStatic = true; // Custom property to manage static state
   pigs.push(pig2);
 
   let pig3 = createSprite(725, baseY - blockSize - blockSize / 5, pigSize, pigSize);
   pig3.addImage(pigImage);
   pig3.scale = 0.03;
+  pig3.velocity.x = 0; // Set initial velocity to zero
+  pig3.velocity.y = 0; // Set initial velocity to zero
+  pig3.isStatic = true; // Custom property to manage static state
   pigs.push(pig3);
 
   // Top most blocks
   for (let i = 0; i < 3; i++) {
     let block = createSprite(650 + i * blockSize, baseY - blockSize - blockSize / 5 - blockSize / 5, blockSize / 5, blockSize);
-    block.addImage(block3);
+    block.addImage(blockImages[3]);
+    block.velocity.x = 0; // Set initial velocity to zero
+    block.velocity.y = 0; // Set initial velocity to zero
+    block.isStatic = true; // Custom property to manage static state
     blocks.push(block);
   }
 
   let pig4 = createSprite(700, baseY - blockSize - blockSize - blockSize / 5, pigSize, pigSize);
   pig4.addImage(pigImage);
-  pig4.scale = 0.03;
+  pig4.scale = 0.3;
+.03;
+  pig4.velocity.x = 0; // Set initial velocity to zero
+  pig4.velocity.y = 0; // Set initial velocity to zero
+  pig4.isStatic = true; // Custom property to manage static state
   pigs.push(pig4);
+}
+
+function applyGravity() {
+  for (let bird of birds) {
+    if (!bird.isStatic) {
+      bird.velocity.y += 0.5;
+    }
+  }
+  for (let pig of pigs) {
+    pig.velocity.y += 0.5;
+  }
+  for (let block of blocks) {
+    block.velocity.y += 0.5;
+  }
 }
 
 function destroyPig(bird, pig) {
   pig.remove();
   score += 10;
+  console.log("Pig hit! Score: " + score);
+}
+
+function destroyPigOnCollision(pig, collider) {
+  let impactForce = collider.mass * (collider.velocity.x ** 2 + collider.velocity.y ** 2);
+  if (impactForce > 5) { // Threshold value for destruction, adjust as needed
+    pig.remove();
+    score += 10;
+    console.log("Pig destroyed by collision! Score: " + score);
+  }
 }
 
 function keyPressed() {
@@ -235,7 +292,6 @@ function dropEgg(bird) {
   let egg = createSprite(bird.position.x, bird.position.y, 10, 20);
   egg.shapeColor = color(255, 255, 0);
   egg.velocity.y = 5;
-  egg.isStatic = true;
   egg.life = 50;
   egg.overlap(pigs, (e, pig) => {
     pig.remove();
@@ -249,6 +305,11 @@ function nextBird() {
     birds[currentBirdIndex].visible = false;
     currentBirdIndex++;
     birds[currentBirdIndex].visible = true;
+    birds[currentBirdIndex].position.x = 200;
+    birds[currentBirdIndex].position.y = 400;
+    birds[currentBirdIndex].velocity.x = 0;
+    birds[currentBirdIndex].velocity.y = 0;
+    birds[currentBirdIndex].isStatic = true;
     launched = false;
   } else {
     gameState = "gameOver";
@@ -270,5 +331,5 @@ function resetGame() {
   gameState = "playing";
   restartButton.hide();
   score = 0;
-  console.log("Game reset. Birds after creation:", birds);
+  console.log("Game reset. Birds after collision", birds);
 }

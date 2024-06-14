@@ -619,7 +619,7 @@ function resetGame() {
   gameState = "playing";
   restartButton.hide();
   score = 0;
-  console.log("Game reset. Birds after ");
+  console.log("Game reset. Birds after collision");
 
 
 

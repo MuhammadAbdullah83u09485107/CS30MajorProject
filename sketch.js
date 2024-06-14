@@ -380,3 +380,63 @@ function resetGame() {
   score = 0;
   console.log("Game reset. Birds after creation:", birds);
 }
+
+
+function drawGame() {
+  image(slingImage, 160, 370, 80, 100);
+  let bird = birds[currentBirdIndex];
+
+  if (mouseIsPressed && !launched && gameState === "playing") {
+    bird.position.x = mouseX;
+    bird.position.y = mouseY;
+    bird.isStatic = true; // Keep the bird static while dragging
+  }
+
+  if (
+    !mouseIsPressed &&
+    !launched &&
+    gameState === "playing" &&
+    bird.position.x !== 200 &&
+    bird.position.y !== 400
+  ) {
+    let dx = sling.position.x - bird.position.x;
+    let dy = sling.position.y - bird.position.y;
+    bird.velocity.x = dx * 0.1;
+    bird.velocity.y = dy * 0.1;
+    bird.isStatic = false; // Make bird dynamic when launched
+    bird.restitution = 0.5; // Add bounce
+    console.log("Bird launched:", bird);
+    launched = true; // Set launched to true
+  }
+
+  if (launched && bird.collide(ground)) {
+    bird.isStatic = true;
+    bird.velocity.x = 0;
+    bird.velocity.y = 0;
+    bird.restitution = 0; // Remove bounce to keep the bird on the ground
+    nextBird();
+  }
+
+  if (
+    launched &&
+    (bird.position.x < 0 || bird.position.x > width || bird.position.y > height)
+  ) {
+    nextBird();
+  }
+
+  applyGravity(); // Apply gravity in each frame
+
+  for (let block of blocks) {
+    block.collide(ground);
+  }
+  for (let pig of pigs) {
+    bird.overlap(pig, destroyPig); // Check for collision with pig
+    pig.collide(ground);
+  }
+
+  drawSprites();
+
+  textSize(24);
+  fill(0);
+  text(`Score: ${score}`, width - 100, 50);
+}

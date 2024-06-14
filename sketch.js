@@ -20,9 +20,7 @@ function preload() {
   slingImage = loadImage("assets/slingshotangrybirds.webp");
   pigImage = loadImage("assets/pigangrybirds.webp");
   blockImages = [
-    loadImage("assets/block1.png"),
-    loadImage("assets/block2.png"),
-    loadImage("assets/block3.png"),
+    loadImage("assets/block1-3.png"),
     loadImage("assets/block7.png")
   ];
 }
@@ -213,7 +211,6 @@ function createEnvironment() {
   let pig4 = createSprite(700, baseY - blockSize - blockSize - blockSize / 5, pigSize, pigSize);
   pig4.addImage(pigImage);
   pig4.scale = 0.3;
-.03;
   pig4.velocity.x = 0; // Set initial velocity to zero
   pig4.velocity.y = 0; // Set initial velocity to zero
   pig4.isStatic = true; // Custom property to manage static state
@@ -280,8 +277,8 @@ function bombExplosion(bird) {
     }
   }
   for (let block of blocks) {
-    if (dist(bird.position.x, bird.position.y, block.position.x, block.position.y) < 100) {
-      block.remove();
+    if (dist(bird.position.x, bird.position.y, pig.position.x, pig.position.y) < 100) {
+      pig.remove();
     }
   }
   bird.remove();

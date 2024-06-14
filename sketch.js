@@ -4,14 +4,12 @@ let currentBirdIndex = 0;
 let sling, slingImage;
 let ground;
 let pigs = [];
-let boxes = [];
+let blocks = [];
 let launched = false;
-let boxImage, pigImage;
 let birdTypes = ["Red", "Chuck", "Bomb", "Matilda"];
 let gameState = "howToPlay";
 let restartButton;
 let score = 0;
-let backgroundImage;
 
 function preload() {
     redBird = loadImage('assets/redangrybird.webp');
@@ -19,13 +17,12 @@ function preload() {
     bombBird = loadImage('assets/angrybirdbomb.webp');
     matildaBird = loadImage('assets/matildaangrybird.png');
     slingImage = loadImage('assets/slingshotangrybirds.webp');
-    boxImage = loadImage('assets/woodblockangrybirds.webp');
     pigImage = loadImage('assets/pigangrybirds.webp');
-    backgroundImage = loadImage('assets/background.jpg');
 }
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+    world.gravity.y = 10; // Setting gravity for the physics world
     createBirds();
     createEnvironment();
     restartButton = createButton('Restart');
@@ -35,7 +32,7 @@ function setup() {
 }
 
 function draw() {
-    background(backgroundImage);
+    background(200);
     if (gameState === "howToPlay") {
         drawHowToPlay();
     } else if (gameState === "playing") {
@@ -61,7 +58,7 @@ function drawHowToPlay() {
 }
 
 function drawGame() {
-    image(slingImage, 160, 370, 80, 100); // Adjusted size and position
+    image(slingImage, 160, 370, 80, 100);
     if (mouseIsPressed && !launched && gameState === "playing") {
         birds[currentBirdIndex].position.x = mouseX;
         birds[currentBirdIndex].position.y = mouseY;
@@ -75,9 +72,9 @@ function drawGame() {
         launched = true;
     }
     birds[currentBirdIndex].collide(ground);
-    for (let box of boxes) {
-        birds[currentBirdIndex].collide(box);
-        box.collide(ground);
+    for (let block of blocks) {
+        birds[currentBirdIndex].collide(block);
+        block.collide(ground);
     }
     for (let pig of pigs) {
         birds[currentBirdIndex].collide(pig, destroyPig);
@@ -106,6 +103,7 @@ function createBirds() {
     for (let i = 0; i < birdTypes.length; i++) {
         let bird = createSprite(200, 400, 30, 30);
         bird.scale = 0.2; // Smaller bird size
+        bird.addCollider("dynamic"); // Add dynamic collider to birds
         switch (birdTypes[i]) {
             case "Red":
                 bird.addImage(redBird);
@@ -132,18 +130,68 @@ function createEnvironment() {
     sling.visible = false;
     ground = createSprite(width / 2, height - 10, width, 20);
     ground.immovable = true;
+    ground.addCollider("static"); // Add static collider to ground
+    
+    // Create structure for pigs
+    let baseY = height - 50;
+    let pigSize = 20;
+    let blockSize = 50;
+    
+    // Bottom layer blocks
     for (let i = 0; i < 3; i++) {
-        let pig = createSprite(600, height - 100 - i * 50, 40, 40); // Adjusted position
-        pig.addImage(pigImage);
-        pig.scale = 0.2; // Adjusted pig size
-        pigs.push(pig);
+        let block = createSprite(650 + i * blockSize, baseY, blockSize, blockSize / 5);
+        block.shapeColor = color(165, 42, 42);
+        block.addCollider("dynamic"); // Add dynamic collider to blocks
+        blocks.push(block);
     }
+    
+    // Middle blocks and pigs
     for (let i = 0; i < 3; i++) {
-        let box = createSprite(650, height - 100 - i * 50, 50, 50); // Adjusted position
-        box.addImage(boxImage.get(0, 0, 50, 50));
-        box.scale = 0.2; // Adjusted box size
-        boxes.push(box);
+        let block = createSprite(650 + i * blockSize, baseY - blockSize / 5, blockSize / 5, blockSize);
+        block.shapeColor = color(165, 42, 42);
+        block.addCollider("dynamic"); // Add dynamic collider to blocks
+        blocks.push(block);
     }
+    
+    let pig1 = createSprite(700, baseY - blockSize / 5, pigSize, pigSize);
+    pig1.addImage(pigImage);
+    pig1.scale = 0.03;
+    pig1.addCollider("dynamic"); // Add dynamic collider to pigs
+    pigs.push(pig1);
+    
+    // Top blocks and pigs
+    for (let i = 0; i < 3; i++) {
+        let block = createSprite(650 + i * blockSize, baseY - blockSize - blockSize / 5, blockSize, blockSize / 5);
+        block.shapeColor = color(165, 42, 42);
+        block.addCollider("dynamic"); // Add dynamic collider to blocks
+        blocks.push(block);
+    }
+    
+    let pig2 = createSprite(675, baseY - blockSize - blockSize / 5, pigSize, pigSize);
+    pig2.addImage(pigImage);
+    pig2.scale = 0.03;
+    pig2.addCollider("dynamic"); // Add dynamic collider to pigs
+    pigs.push(pig2);
+    
+    let pig3 = createSprite(725, baseY - blockSize - blockSize / 5, pigSize, pigSize);
+    pig3.addImage(pigImage);
+    pig3.scale = 0.03;
+    pig3.addCollider("dynamic"); // Add dynamic collider to pigs
+    pigs.push(pig3);
+    
+    // Top most blocks
+    for (let i = 0; i < 3; i++) {
+        let block = createSprite(650 + i * blockSize, baseY - blockSize - blockSize / 5 - blockSize / 5, blockSize / 5, blockSize);
+        block.shapeColor = color(165, 42, 42);
+        block.addCollider("dynamic"); // Add dynamic collider to blocks
+        blocks.push(block);
+    }
+    
+    let pig4 = createSprite(700, baseY - blockSize - blockSize - blockSize / 5, pigSize, pigSize);
+    pig4.addImage(pigImage);
+    pig4.scale = 0.03;
+    pig4.addCollider("dynamic"); // Add dynamic collider to pigs
+    pigs.push(pig4);
 }
 
 function destroyPig(bird, pig) {
@@ -181,15 +229,15 @@ function bombExplosion(bird) {
             score += 10;
         }
     }
-    for (let box of boxes) {
-        if (dist(bird.position.x, bird.position.y, box.position.x, box.position.y) < 100) {
-            box.remove();
-        }
-    }
-    bird.remove();
-    nextBird();
-}
-
+    for (let block of blocks) {
+        if (dist(bird.position.x,bird.position.y, block.position.x, block.position.y) < 100) {
+            block.remove();
+                }
+                }
+            bird.remove();
+            nextBird();
+                }
+                
 function dropEgg(bird) {
     let egg = createSprite(bird.position.x, bird.position.y, 10, 20);
     egg.shapeColor = color(255, 255, 0);
@@ -200,14 +248,14 @@ function dropEgg(bird) {
         pig.remove();
         score += 10;
     });
-    egg.overlap(boxes, (e, box) => box.remove());
+    egg.overlap(blocks, (e, block) => block.remove());
 }
 
 function nextBird() {
     if (currentBirdIndex < birds.length - 1) {
-        birds[currentBirdIndex].visible = false; // Hide the current bird
+        birds[currentBirdIndex].visible = false;
         currentBirdIndex++;
-        birds[currentBirdIndex].visible = true; // Show the next bird
+        birds[currentBirdIndex].visible = true;
         launched = false;
     } else {
         gameState = "gameOver";
@@ -223,21 +271,24 @@ function resetGame() {
     createBirds();
     pigs.forEach(pig => pig.remove());
     pigs = [];
-    for (let i = 0; i < 3; i++) {
-        let pig = createSprite(600, height - 100 - i * 50, 40, 40); // Adjusted position
-        pig.addImage(pigImage);
-        pig.scale = 0.2; // Adjusted pig size
-        pigs.push(pig);
-    }
-    boxes.forEach(box => box.remove());
-    boxes = [];
-    for (let i = 0; i < 3; i++) {
-        let box = createSprite(650, height - 100 - i * 50, 50, 50); // Adjusted position
-        box.addImage(boxImage.get(0, 0, 50, 50));
-        box.scale = 0.2; // Adjusted box size
-        boxes.push(box);
-    }
+    blocks.forEach(block => block.remove());
+    blocks = [];
+    createEnvironment();
     gameState = "playing";
     restartButton.hide();
     score = 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
